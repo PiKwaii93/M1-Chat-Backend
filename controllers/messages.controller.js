@@ -1,23 +1,9 @@
 const pool = require("../database/db");
 
-const usersController = {
+const messagesController = {
   getAllMessages: async (req, res) => {
     try {
       const [rows, fields] = await pool.query("SELECT * FROM message");
-      res.status(200).json({ data: rows });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error });
-    }
-  },
-
-  getAllMessagesInAConversation: async (req, res) => {
-    try {
-      const { conversation_id } = req.params;
-      const [rows, fields] = await pool.query(
-        "SELECT * FROM message WHERE conversation_id = ?",
-        [conversation_id]
-      );
       res.status(200).json({ data: rows });
     } catch (error) {
       console.error(error);
@@ -54,4 +40,4 @@ const usersController = {
   },
 };
 
-module.exports = usersController;
+module.exports = messagesController;
