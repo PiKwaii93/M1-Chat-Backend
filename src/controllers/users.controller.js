@@ -1,4 +1,5 @@
 const pool = require("../database/db");
+const bcrypt = require("bcrypt");
 
 const usersController = {
   getAllUsers: async (req, res) => {
@@ -27,12 +28,17 @@ const usersController = {
 
   createUser: async (req, res) => {
     try {
-      const { user_name, email, password, status } = req.body;
-      const created_at = new Date();
-      const updated_at = new Date();
+      console.log(req.body);
+
+      const { user_name, email, password } = req.body;
+
+      const hash = await bcrypt.hash(password, 10);
+
+      const created_at = new Date(Date.now());
+      const updated_at = new Date(Date.now());
       const [rows, fields] = await pool.query(
-        "INSERT INTO user (user_name, email, password, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-        [user_name, email, password, status, created_at, updated_at]
+        "INSERT INTO user (user_name, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+        [user_name, email, hash, created_at, updated_at]
       );
       res.status(200).json({ data: rows });
     } catch (error) {
