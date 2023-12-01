@@ -1,11 +1,35 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const cors= require('cors')
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const app = express();
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+app.use(cors({
+    origin: '*'
+}));
+
+const server = http.createServer(app);
+const io = socketIo(server, {
+    cors: {
+      origin: '*',
+    }
+});
+
+io.on('connection', (socket) => {
+    console.log('New user connected');
+
+    socket.on('sendMessage', (message) => {
+        io.emit('message', message); // Broadcast the message to all connected clients
+    });
+  
+    socket.on('disconnect', () => {
+      console.log('User disconnected');
+    });
+  });
+
+const PORT = process.env.PORT || 5000;
+
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
