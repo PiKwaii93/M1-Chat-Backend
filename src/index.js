@@ -3,18 +3,17 @@ const app = express();
 const cors = require("cors");
 const http = require("http").Server(app);
 require("dotenv").config();
-const mysql = require("mysql2");
+
+app.use(cors());
+app.use(express.json());
+let users = [];
 const PORT = 4000;
+
 const socketIO = require("socket.io")(http, {
   cors: {
     origin: "*",
   },
 });
-const usersRouter = require("./routes/users.routes");
-const messagesRouter = require("./routes/messages.routes");
-
-app.use(cors());
-let users = [];
 
 socketIO.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
@@ -37,9 +36,11 @@ socketIO.on("connection", (socket) => {
   });
 });
 
+const usersRouter = require("./routes/users.routes");
+const messagesRouter = require("./routes/messages.routes");
 app.use("/api/users", usersRouter);
 app.use("/api/messages", messagesRouter);
 
-http.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });

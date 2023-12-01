@@ -1,6 +1,6 @@
 const pool = require("../database/db");
 
-const usersController = {
+const messagesController = {
   getAllMessages: async (req, res) => {
     try {
       const [rows, fields] = await pool.query("SELECT * FROM message");
@@ -54,4 +54,4 @@ const usersController = {
   },
 };
 
-module.exports = usersController;
+module.exports = messagesController;
