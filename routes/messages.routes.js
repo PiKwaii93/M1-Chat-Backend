@@ -4,10 +4,6 @@ const messagesController = require("../controllers/messages.controller");
 
 router.get("/", messagesController.getAllMessages);
 router.get("/:id", messagesController.getOneMessageById);
-router.get(
-  "/:id_conversation",
-  messagesController.getAllMessagesInAConversation
-);
 router.post("/", messagesController.sendMessage);
 
 module.exports = router;

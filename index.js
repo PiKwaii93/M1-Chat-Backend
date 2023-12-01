@@ -12,7 +12,9 @@ const socketIO = require("socket.io")(http, {
 });
 const usersRouter = require("./routes/users.routes");
 const messagesRouter = require("./routes/messages.routes");
+const conversationsRouter = require("./routes/conversations.routes");
 
+app.use(express.json());
 app.use(cors());
 let users = [];
 
@@ -39,6 +41,7 @@ socketIO.on("connection", (socket) => {
 
 app.use("/api/users", usersRouter);
 app.use("/api/messages", messagesRouter);
+app.use("/api/conversations", conversationsRouter);
 
 http.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
