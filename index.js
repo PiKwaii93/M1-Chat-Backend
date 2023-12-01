@@ -7,9 +7,11 @@ const mysql = require("mysql2");
 const PORT = 4000;
 const socketIO = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
   },
 });
+const usersRouter = require("./routes/users.routes");
+const messagesRouter = require("./routes/messages.routes");
 
 app.use(cors());
 let users = [];
@@ -35,27 +37,8 @@ socketIO.on("connection", (socket) => {
   });
 });
 
-// create a new MySQL connection
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.PORT || 3306,
-});
-
-// connect to the MySQL database
-connection.connect((error) => {
-  if (error) {
-    console.error("Error connecting to MySQL database:", error);
-  } else {
-    console.log("Connected to MySQL database!");
-  }
-});
-
-app.get("/users", (req, res) => {
-  res.json({ message: "Hello" });
-});
+app.use("/api/users", usersRouter);
+app.use("/api/messages", messagesRouter);
 
 http.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
